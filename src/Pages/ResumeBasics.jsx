@@ -46,13 +46,16 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import {
   openModal,
   removeCertificateData,
+  removeExperience,
   removeLanguage,
+  removeSkills,
 } from "../Store/modalSlice";
 import "react-quill/dist/quill.snow.css";
 import { useDispatch, useSelector } from "react-redux";
 import Resume from "./Resume";
 import {
   ArrowBack,
+  Circle,
   DeleteRounded,
   Language,
   ShareOutlined,
@@ -72,6 +75,12 @@ function ResumeBasics() {
   const [renameValue, setRenameValue] = useState(""); // For rename input field
   const [subMenuType, setSubMenuType] = useState("");
   const [showProfile, setShowProfile] = useState(true);
+  const [textColor, setTextColor] = useState("black");
+  const [text, setText] = useState("");
+
+  const handleColorChange = (color) => {
+    setTextColor(color);
+  };
   const quillRef = useRef(null);
   // console.log(formData, "fdf");
 
@@ -197,6 +206,8 @@ function ResumeBasics() {
   const profiles = useSelector((state) => state.modal.profiles);
   const certificate = useSelector((state) => state.modal.certificate);
   const language = useSelector((state) => state.modal.language);
+  const Skills = useSelector((state) => state.modal.skills);
+  const Experience = useSelector((state) => state.modal.experience);
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -567,13 +578,13 @@ function ResumeBasics() {
               >
                 <span style={{ display: "flex", alignItems: "center", gap: 6 }}>
                   <LuSquareMenu
-                    style={{ width: "24px", height: "24px", marginRight: 2 }}
+                    style={{ width: "18px", height: "18px", marginRight: 2 }}
                   />
                   <Typography>{formData?.title}</Typography>
                 </span>
                 <IconButton onClick={handleIconClick}>
                   <MenuIcon
-                    sx={{ width: "25px", height: "25px", color: "white" }}
+                    sx={{ width: "18px", height: "18px", color: "white" }}
                   />
                 </IconButton>
 
@@ -717,13 +728,13 @@ function ResumeBasics() {
               >
                 <span style={{ display: "flex", alignItems: "center", gap: 9 }}>
                   <ShareOutlined
-                    style={{ width: "24px", height: "24px", marginRight: 2 }}
+                    style={{ width: "18px", height: "18px", marginRight: 2 }}
                   />
                   <Typography>{"Profile"}</Typography>
                 </span>
                 <IconButton onClick={handleIconClick2}>
                   <MenuIcon
-                    sx={{ width: "25px", height: "25px", color: "white" }}
+                    sx={{ width: "18px", height: "18px", color: "white" }}
                   />
                 </IconButton>
 
@@ -856,7 +867,7 @@ function ResumeBasics() {
               >
                 <span style={{ display: "flex", alignItems: "center", gap: 9 }}>
                   <RedeemOutlinedIcon
-                    style={{ width: "24px", height: "24px", marginRight: 2 }}
+                    style={{ width: "18px", height: "18px", marginRight: 2 }}
                   />
                   <Typography>{"Cerification"}</Typography>
                 </span>
@@ -864,7 +875,7 @@ function ResumeBasics() {
                 //  onClick={handleIconClick2}
                 >
                   <MenuIcon
-                    sx={{ width: "25px", height: "25px", color: "white" }}
+                    sx={{ width: "18px", height: "18px", color: "white" }}
                   />
                 </IconButton>
 
@@ -984,6 +995,144 @@ function ResumeBasics() {
                 Add Certification
               </Button>
             </Grid>
+            {/* certification part */}
+            <Grid sx={{ bgcolor: "#000" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  color: "white",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <span style={{ display: "flex", alignItems: "center", gap: 9 }}>
+                  <SchoolOutlinedIcon
+                    style={{ width: "18px", height: "18px", marginRight: 2 }}
+                  />
+                  <Typography>{"ExperIence"}</Typography>
+                </span>
+                <IconButton
+                //  onClick={handleIconClick2}
+                >
+                  <MenuIcon
+                    sx={{ width: "18px", height: "18px", color: "white" }}
+                  />
+                </IconButton>
+
+                {/* popover for profile */}
+                {/* <Popover
+                  open={openprofile}
+                  anchorEl={anchorElprofile}
+                  onClose={handleClose}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}
+                >
+                  <Box sx={{ p: 1, bgcolor: "#000" }}>
+                    {ProfilemenuOptions?.map((option) => (
+                      <MenuItem
+                        key={option.value}
+                        onClick={(e) => {
+                          if (option.value === "toggleProfile") {
+                            setShowProfile((prev) => !prev);
+                            handleClose(); // optional: close the popover
+                          } else if (option.value === "renameprofile") {
+                            setSubMenuType("renameprofile");
+                            handleSubMenuOpen(e); // Open rename submenu
+                          } else if (option.value === "columnprofile") {
+                            setSubMenuType("columnprofile");
+                            handleSubMenuOpen(e); // Open columns submenu
+                          } else {
+                            handleSelect(option.value);
+                          }
+                        }}
+                        sx={{ ":hover": { bgcolor: "grey" }, bgcolor: "black" }}
+                      >
+                        <Box
+                          sx={{
+                            display: "flex",
+                            // justifyContent: "space-between",
+                            color: "white",
+                            width: "100%",
+                            gap: 2,
+                            fontSize: "14px",
+                            cursor: "pointer",
+                            bgcolor: "#000",
+                            ":hover": { bgcolor: "grey" },
+                          }}
+                        >
+                          {option?.icon}
+                          {option?.label}
+                        </Box>
+                      </MenuItem>
+                    ))}
+                  </Box>
+                </Popover> */}
+              </Box>
+              <Box sx={{ display: "flex", flexDirection: "column" }}>
+                {Experience.length > 0 && (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      width: "100%",
+                      p: 2,
+                      height: "10vh",
+                      overflow: "auto",
+                      maxHeight: "10vh",
+                    }}
+                  >
+                    {Experience.map((experience, index) => (
+                      <Box
+                        key={index}
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 0.5,
+                          mb: 2,
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            pr: "6px",
+                          }}
+                        >
+                          {" "}
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 2,
+                            }}
+                          >
+                            <Typography
+                              sx={{ fontSize: "14px", fontWeight: 400 }}
+                            >
+                              {experience.experienceName}
+                            </Typography>
+                          </Box>
+                          <CloseIcon
+                            sx={{ mr: 2.5 }}
+                            onClick={() => dispatch(removeExperience(index))}
+                          />
+                        </Box>
+                      </Box>
+                    ))}
+                  </Box>
+                )}
+              </Box>
+              <Button
+                variant="outlined"
+                startIcon={<AddIcon style={{ fontSize: "14px" }} />}
+                onClick={() => dispatch(openModal("experience"))}
+              >
+                Add Experience
+              </Button>
+            </Grid>
             {/* Languagee part */}
             <Grid sx={{ bgcolor: "#000" }}>
               <Box
@@ -996,7 +1145,7 @@ function ResumeBasics() {
               >
                 <span style={{ display: "flex", alignItems: "center", gap: 9 }}>
                   <TranslateOutlinedIcon
-                    style={{ width: "24px", height: "24px", marginRight: 2 }}
+                    style={{ width: "18px", height: "18px", marginRight: 2 }}
                   />
                   <Typography>{"Language"}</Typography>
                 </span>
@@ -1004,7 +1153,7 @@ function ResumeBasics() {
                 //  onClick={handleIconClick2}
                 >
                   <MenuIcon
-                    sx={{ width: "25px", height: "25px", color: "white" }}
+                    sx={{ width: "18px", height: "18px", color: "white" }}
                   />
                 </IconButton>
               </Box>
@@ -1076,6 +1225,119 @@ function ResumeBasics() {
                 Add Language
               </Button>
             </Grid>
+            {/* Skills part */}
+            <Grid sx={{ bgcolor: "#000" }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  color: "white",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <span style={{ display: "flex", alignItems: "center", gap: 9 }}>
+                  <AccountTreeOutlinedIcon
+                    style={{ width: "18px", height: "18px", marginRight: 2 }}
+                  />
+                  <Typography>{"Skills"}</Typography>
+                </span>
+                <IconButton
+                //  onClick={handleIconClick2}
+                >
+                  <MenuIcon
+                    sx={{ width: "18px", height: "18px", color: "white" }}
+                  />
+                </IconButton>
+              </Box>
+              <Box sx={{ display: "flex", flexDirection: "column" }}>
+                {Skills.length > 0 && (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      width: "100%",
+                      p: 2,
+                      height: "10vh",
+                      overflow: "auto",
+                      maxHeight: "10vh",
+                    }}
+                  >
+                    {Skills.map((item, index) => (
+                      <Box
+                        key={index}
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 0.5,
+                          mb: 2,
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            pr: "6px",
+                          }}
+                        >
+                          {" "}
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 2,
+                            }}
+                          >
+                            <Typography
+                              sx={{ fontSize: "14px", fontWeight: 400 }}
+                            >
+                              {item.skillname}
+                            </Typography>
+                            <Typography
+                              sx={{ fontSize: "14px", fontWeight: 400 }}
+                            >
+                              {item.skilldescription}
+                            </Typography>
+                          </Box>
+                          <CloseIcon
+                            sx={{ mr: 2.5 }}
+                            onClick={() => dispatch(removeSkills(index))}
+                          />
+                        </Box>
+                      </Box>
+                    ))}
+                  </Box>
+                )}
+              </Box>
+              <Button
+                variant="outlined"
+                startIcon={<AddIcon style={{ fontSize: "14px" }} />}
+                onClick={() => dispatch(openModal("skills"))}
+              >
+                Add Skills
+              </Button>
+            </Grid>
+            {/* Theme option */}
+            <Grid sx={{ width: "100%" }}>
+              <Typography sx={{ fontSize: "14px", fontWeight: 500 }}>
+                Change Theme
+              </Typography>
+              <IconButton onClick={() => handleColorChange("blue")}>
+                <Circle style={{ color: "blue" }} />
+              </IconButton>
+              <IconButton onClick={() => handleColorChange("black")}>
+                <Circle style={{ color: "black" }} />
+              </IconButton>
+              <IconButton onClick={() => handleColorChange("#cf485f")}>
+                <Circle style={{ color: "#cf485f" }} />
+              </IconButton>
+              <IconButton onClick={() => handleColorChange("red")}>
+                <Circle style={{ color: "red" }} />
+              </IconButton>
+              <IconButton onClick={() => handleColorChange("purple")}>
+                <Circle style={{ color: "purple" }} />
+              </IconButton>
+            </Grid>
           </Grid>
           <Grid size={{ xs: 12, md: 7.8 }}>
             <Resume
@@ -1083,6 +1345,7 @@ function ResumeBasics() {
               selectedColumns={selectedColumns}
               showProfile={showProfile}
               img={avimg}
+              textColor={textColor}
             />
           </Grid>
         </Grid>
@@ -1161,7 +1424,7 @@ const theme = createTheme({
     MuiTypography: {
       styleOverrides: {
         root: {
-          fontSize: "24px",
+          fontSize: "22px",
           fontWeight: 500,
         },
       },

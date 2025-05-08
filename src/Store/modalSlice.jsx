@@ -9,6 +9,8 @@ const modalSlice = createSlice({
     profiles: [],
     certificate: [],
     language: [],
+    skills: [],
+    experience: [],
   },
   reducers: {
     openModal: (state, action) => {
@@ -35,6 +37,20 @@ const modalSlice = createSlice({
     removeLanguage: (state, action) => {
       state.language.splice(action.payload, 1);
     },
+    addSkills: (state, action) => {
+      state.skills.push(action.payload);
+    },
+
+    removeSkills: (state, action) => {
+      state.skills.splice(action.payload, 1);
+    },
+    addExperience: (state, action) => {
+      state.experience.push(action.payload);
+    },
+
+    removeExperience: (state, action) => {
+      state.experience.splice(action.payload, 1);
+    },
     closeModal: (state) => {
       state.isOpen = false;
       state.modalType = null;
@@ -51,5 +67,9 @@ export const {
   removeCertificateData,
   addLanguage,
   removeLanguage,
+  addSkills,
+  removeSkills,
+  addExperience,
+  removeExperience,
 } = modalSlice.actions;
 export default modalSlice.reducer;
