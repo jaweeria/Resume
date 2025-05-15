@@ -1,11 +1,12 @@
-import { useState } from "react";
 import ResumeBasics from "./Pages/ResumeBasics";
-import { SnackbarProvider, enqueueSnackbar } from "notistack";
+import { SnackbarProvider } from "notistack";
+import { CssBaseline } from "@mui/material";
+
 function App() {
   return (
     <>
+      <CssBaseline />
       <SnackbarProvider>
-        {" "}
         <ResumeBasics />
       </SnackbarProvider>
     </>

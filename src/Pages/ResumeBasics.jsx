@@ -15,6 +15,7 @@ import {
   InputLabel,
   ListItemIcon,
   Menu,
+  Select,
 } from "@mui/material";
 import PeopleOutlineOutlinedIcon from "@mui/icons-material/PeopleOutlineOutlined";
 import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
@@ -44,11 +45,13 @@ import ModeEditOutlinedIcon from "@mui/icons-material/ModeEditOutlined";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import {
+  openEditModal,
   openModal,
   removeCertificateData,
   removeExperience,
   removeLanguage,
   removeSkills,
+  setSelectedProfile,
 } from "../Store/modalSlice";
 import "react-quill/dist/quill.snow.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -60,9 +63,28 @@ import {
   Language,
   ShareOutlined,
 } from "@mui/icons-material";
+import EditIcon from "@mui/icons-material/Edit";
 import Allmodal from "./Allmodal";
 import { removeProfileData } from "../Store/modalSlice";
+import EditModal from "./EditModal";
+import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
 function ResumeBasics() {
+  const fontOptions = [
+    "Poppins, sans-serif",
+    "Roboto, sans-serif",
+    "Open Sans, sans-serif",
+    "Lato, sans-serif",
+    "Montserrat, sans-serif",
+    "Inter, sans-serif",
+    "Noto Sans, sans-serif",
+    "Ubuntu, sans-serif",
+    "Raleway, sans-serif",
+    "Helvetica, sans-serif",
+    "Arial, sans-serif",
+    "Georgia, serif",
+    "Times New Roman, serif",
+  ];
+
   const dispatch = useDispatch();
   const formData = useSelector((state) => state.form);
   const [subMenuAnchorEl, setSubMenuAnchorEl] = useState(null);
@@ -76,16 +98,42 @@ function ResumeBasics() {
   const [subMenuType, setSubMenuType] = useState("");
   const [showProfile, setShowProfile] = useState(true);
   const [textColor, setTextColor] = useState("black");
-  const [text, setText] = useState("");
+  const [selectedTheme, setSelectedTheme] = useState("modern");
+  const [fontFamily, setfontFamily] = useState("");
+  const [mainboxstateColor, setMainBoxStateColor] = useState("black");
+  const [search, setSearch] = useState("");
+
+  const [anchorEll, setAnchorEll] = useState(null);
+  const inputRef = useRef();
+
+  const filteredFonts = fontOptions.filter((font) =>
+    font.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const handleOpen = (event) => {
+    setAnchorEll(event.currentTarget);
+  };
+
+  const handleCloseFont = () => {
+    setAnchorEll(null);
+    setSearch(""); // Clear search on close
+  };
+
+  const handleSelectFont = (font) => {
+    setfontFamily(font);
+    setAnchorEll(null);
+  };
 
   const handleColorChange = (color) => {
     setTextColor(color);
   };
+
   const quillRef = useRef(null);
-  // console.log(formData, "fdf");
 
   const [showlabelInput, setShowlabelInput] = useState(false);
   const [addcustomfield, setAddCustomField] = useState([]);
+  const [customLines, setCustomLines] = useState([]);
+
   // Function to handle changes in formData (e.g., input field changes)
   const [avimg, setAvimg] = useState("");
 
@@ -96,9 +144,17 @@ function ResumeBasics() {
       setAvimg(imageUrl);
     }
   };
+
+  const handleAddCustomLine = () => {
+    setCustomLines((prev) => [...prev, { id: Date.now() }]); // Add a new line with a unique ID
+  };
+  const handleRemoveLine = (id) => {
+    setCustomLines((prev) => prev.filter((line) => line.id !== id));
+  };
   const handleAddCustomField = () => {
     setAddCustomField((prev) => [...prev, { name: "", value: "" }]);
   };
+
   const handleRemoveField = (index) => {
     const updatedFields = [...addcustomfield];
     updatedFields.splice(index, 1);
@@ -122,7 +178,7 @@ function ResumeBasics() {
 
   const handleSelect = (value) => {
     setSelectedValue(value);
-    handleClose();
+    handleCloseFont();
   };
 
   const handleClose = () => {
@@ -213,7 +269,7 @@ function ResumeBasics() {
       <ThemeProvider theme={theme}>
         <Grid container>
           <Grid
-            size={{ xs: 12, md: 3.2 }}
+            size={{ xs: 12, md: 3 }}
             sx={{
               display: "flex",
               flexDirection: "column",
@@ -222,6 +278,21 @@ function ResumeBasics() {
               overflowY: "auto",
               overflowX: "hidden",
               bgcolor: "#000",
+              p: 1,
+              // Custom scrollbar styles
+              "&::-webkit-scrollbar": {
+                width: "6px",
+              },
+              "&::-webkit-scrollbar-track": {
+                backgroundColor: "#000", // track background
+              },
+              "&::-webkit-scrollbar-thumb": {
+                backgroundColor: "#555", // scrollbar handle color
+                borderRadius: "10px",
+              },
+              scrollbarWidth: "thin", // for Firefox
+
+              scrollbarColor: "#555 #000", // thumb and track colors for Firefox
             }}
           >
             <Box
@@ -330,7 +401,7 @@ function ResumeBasics() {
                 width: "100%",
                 flexDirection: "row",
                 display: "flex",
-                gap: 1,
+                gap: 2,
                 p: 1,
                 alignItems: "center",
               }}
@@ -351,7 +422,7 @@ function ResumeBasics() {
                   value={formData?.email}
                   onChange={handleFormData}
                   sx={{
-                    width: { xs: "90%", md: "170px" },
+                    width: { xs: "90%", md: "100px", lg: "130px" },
                   }}
                 />
               </span>
@@ -371,7 +442,7 @@ function ResumeBasics() {
                   }}
                 >
                   <Typography sx={{ fontSize: "14px", fontWeight: 550 }}>
-                    Website
+                    {formData?.label}
                   </Typography>
                   <RxPencil1
                     style={{ display: "flex", alignSelf: "flex-end" }}
@@ -384,7 +455,7 @@ function ResumeBasics() {
                   value={formData?.website}
                   onChange={handleFormData}
                   sx={{
-                    width: { xs: "90%", md: "170px" },
+                    width: { xs: "90%", md: "100px", lg: "130px" },
                   }}
                 />
               </span>
@@ -661,7 +732,7 @@ function ResumeBasics() {
                             placeholder="Enter new name"
                             size="small"
                             variant="outlined"
-                            value={formData?.[stateKey] || ""}
+                            value={formData?.label || ""}
                             onChange={handleTextFieldChange}
                             sx={{ width: 200, bgcolor: "black" }}
                           />
@@ -825,7 +896,7 @@ function ResumeBasics() {
                             sx={{
                               display: "flex",
                               alignItems: "center",
-                              gap: 2,
+                              gap: 1,
                             }}
                           >
                             {profile.imgUrl && (
@@ -837,10 +908,27 @@ function ResumeBasics() {
                               {profile.username}
                             </Typography>
                           </Box>
-                          <CloseIcon
-                            sx={{ mr: 2.5 }}
-                            onClick={() => dispatch(removeProfileData(index))}
-                          />
+                          <Box
+                            sx={{
+                              display: "flex",
+                              gap: 2,
+                              alignItems: "center",
+                              mr: 2,
+                            }}
+                          >
+                            <CloseIcon
+                              onClick={() => dispatch(removeProfileData(index))}
+                            />
+                            <EditIcon
+                              sx={{ width: "20px", height: "20px" }}
+                              onClick={() => {
+                                dispatch(
+                                  setSelectedProfile({ index, data: profile })
+                                );
+                                dispatch(openEditModal("profiles"));
+                              }}
+                            />
+                          </Box>
                         </Box>
                       </Box>
                     ))}
@@ -850,7 +938,9 @@ function ResumeBasics() {
               <Button
                 variant="outlined"
                 startIcon={<AddIcon style={{ fontSize: "14px" }} />}
-                onClick={() => dispatch(openModal("profile"))}
+                onClick={() => {
+                  dispatch(openModal("profiles"));
+                }}
               >
                 Add Profile
               </Button>
@@ -972,15 +1062,40 @@ function ResumeBasics() {
                             <Typography
                               sx={{ fontSize: "14px", fontWeight: 400 }}
                             >
-                              {certificate.date}
+                              {certificate?.name}
+                            </Typography>
+                            <Typography
+                              sx={{ fontSize: "14px", fontWeight: 400 }}
+                            >
+                              {certificate?.date}
                             </Typography>
                           </Box>
-                          <CloseIcon
-                            sx={{ mr: 2.5 }}
-                            onClick={() =>
-                              dispatch(removeCertificateData(index))
-                            }
-                          />
+                          <Box
+                            sx={{
+                              display: "flex",
+                              gap: 2,
+                              alignItems: "center",
+                              mr: 2,
+                            }}
+                          >
+                            <CloseIcon
+                              onClick={() =>
+                                dispatch(removeCertificateData(index))
+                              }
+                            />
+                            <EditIcon
+                              sx={{ width: "20px", height: "20px" }}
+                              onClick={() => {
+                                dispatch(
+                                  setSelectedProfile({
+                                    index,
+                                    data: certificate,
+                                  })
+                                );
+                                dispatch(openEditModal("certificate"));
+                              }}
+                            />
+                          </Box>
                         </Box>
                       </Box>
                     ))}
@@ -995,7 +1110,7 @@ function ResumeBasics() {
                 Add Certification
               </Button>
             </Grid>
-            {/* certification part */}
+            {/* Experience part */}
             <Grid sx={{ bgcolor: "#000" }}>
               <Box
                 sx={{
@@ -1009,7 +1124,7 @@ function ResumeBasics() {
                   <SchoolOutlinedIcon
                     style={{ width: "18px", height: "18px", marginRight: 2 }}
                   />
-                  <Typography>{"ExperIence"}</Typography>
+                  <Typography>{"Experience"}</Typography>
                 </span>
                 <IconButton
                 //  onClick={handleIconClick2}
@@ -1018,57 +1133,6 @@ function ResumeBasics() {
                     sx={{ width: "18px", height: "18px", color: "white" }}
                   />
                 </IconButton>
-
-                {/* popover for profile */}
-                {/* <Popover
-                  open={openprofile}
-                  anchorEl={anchorElprofile}
-                  onClose={handleClose}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left",
-                  }}
-                >
-                  <Box sx={{ p: 1, bgcolor: "#000" }}>
-                    {ProfilemenuOptions?.map((option) => (
-                      <MenuItem
-                        key={option.value}
-                        onClick={(e) => {
-                          if (option.value === "toggleProfile") {
-                            setShowProfile((prev) => !prev);
-                            handleClose(); // optional: close the popover
-                          } else if (option.value === "renameprofile") {
-                            setSubMenuType("renameprofile");
-                            handleSubMenuOpen(e); // Open rename submenu
-                          } else if (option.value === "columnprofile") {
-                            setSubMenuType("columnprofile");
-                            handleSubMenuOpen(e); // Open columns submenu
-                          } else {
-                            handleSelect(option.value);
-                          }
-                        }}
-                        sx={{ ":hover": { bgcolor: "grey" }, bgcolor: "black" }}
-                      >
-                        <Box
-                          sx={{
-                            display: "flex",
-                            // justifyContent: "space-between",
-                            color: "white",
-                            width: "100%",
-                            gap: 2,
-                            fontSize: "14px",
-                            cursor: "pointer",
-                            bgcolor: "#000",
-                            ":hover": { bgcolor: "grey" },
-                          }}
-                        >
-                          {option?.icon}
-                          {option?.label}
-                        </Box>
-                      </MenuItem>
-                    ))}
-                  </Box>
-                </Popover> */}
               </Box>
               <Box sx={{ display: "flex", flexDirection: "column" }}>
                 {Experience.length > 0 && (
@@ -1115,10 +1179,30 @@ function ResumeBasics() {
                               {experience.experienceName}
                             </Typography>
                           </Box>
-                          <CloseIcon
-                            sx={{ mr: 2.5 }}
-                            onClick={() => dispatch(removeExperience(index))}
-                          />
+                          <Box
+                            sx={{
+                              display: "flex",
+                              gap: 2,
+                              alignItems: "center",
+                              mr: 2,
+                            }}
+                          >
+                            <CloseIcon
+                              onClick={() => dispatch(removeExperience(index))}
+                            />
+                            <EditIcon
+                              sx={{ width: "20px", height: "20px" }}
+                              onClick={() => {
+                                dispatch(
+                                  setSelectedProfile({
+                                    index,
+                                    data: experience,
+                                  })
+                                );
+                                dispatch(openEditModal("experience"));
+                              }}
+                            />
+                          </Box>
                         </Box>
                       </Box>
                     ))}
@@ -1320,37 +1404,124 @@ function ResumeBasics() {
             {/* Theme option */}
             <Grid sx={{ width: "100%" }}>
               <Typography sx={{ fontSize: "14px", fontWeight: 500 }}>
-                Change Theme
+                Change Font Color
               </Typography>
-              <IconButton onClick={() => handleColorChange("blue")}>
-                <Circle style={{ color: "blue" }} />
-              </IconButton>
-              <IconButton onClick={() => handleColorChange("black")}>
-                <Circle style={{ color: "black" }} />
-              </IconButton>
-              <IconButton onClick={() => handleColorChange("#cf485f")}>
-                <Circle style={{ color: "#cf485f" }} />
-              </IconButton>
-              <IconButton onClick={() => handleColorChange("red")}>
-                <Circle style={{ color: "red" }} />
-              </IconButton>
-              <IconButton onClick={() => handleColorChange("purple")}>
-                <Circle style={{ color: "purple" }} />
-              </IconButton>
+              {["blue", "black", "#cf485f", "red", "purple", "white"].map(
+                (color) => (
+                  <IconButton
+                    key={color}
+                    onClick={() => handleColorChange(color)}
+                  >
+                    <Circle style={{ color }} />
+                  </IconButton>
+                )
+              )}
+              <Box>
+                {" "}
+                <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+                  <Typography sx={{ color: "white" }}>Add Line</Typography>
+                  <HorizontalRuleIcon
+                    sx={{ width: "27px", color: "white", cursor: "pointer" }}
+                    onClick={handleAddCustomLine}
+                  />
+                </Box>
+                {customLines.map((line, i) => (
+                  <Box
+                    sx={{
+                      display: "flex",
+                      color: "white",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    {" "}
+                    <Typography sx={{ fontSize: "12px" }} key={line?.id}>
+                      line {i + 1}{" "}
+                    </Typography>
+                    <CloseIcon
+                      sx={{ mr: 2.5 }}
+                      onClick={() => handleRemoveLine(line?.id)}
+                    />
+                  </Box>
+                ))}
+              </Box>
+
+              <div style={{ padding: 10, marginTop: 10 }}>
+                <label style={{ marginRight: 8 }}>Pick a Custom Color:</label>
+                <input
+                  type="color"
+                  value={mainboxstateColor}
+                  onChange={(e) => {
+                    setMainBoxStateColor(e.target.value);
+                  }}
+                />
+              </div>
+              <div style={{ padding: 10, height: "50px" }}>
+                <label style={{ marginRight: 8 }}>Select Font Style:</label>
+                <div style={{ maxHeight: "80px", overflowY: "auto" }}>
+                  <TextField
+                    value={fontFamily}
+                    onClick={handleOpen}
+                    inputRef={inputRef}
+                    fullWidth
+                    size="small"
+
+                    // Prevent keyboard from editing directly
+                  />
+
+                  <Menu
+                    anchorEl={anchorEll}
+                    open={Boolean(anchorEll)}
+                    onClose={handleCloseFont}
+                    PaperProps={{
+                      style: {
+                        width: "200px",
+                        display: "flex",
+                        overflow: "auto",
+                        height: "150px",
+                      },
+                    }}
+                  >
+                    {filteredFonts.length > 0 ? (
+                      filteredFonts.map((font) => (
+                        <MenuItem
+                          key={font}
+                          onClick={() => handleSelectFont(font)}
+                          style={{
+                            fontFamily: font,
+                            fontSize: "12px",
+                          }}
+                        >
+                          {font}
+                        </MenuItem>
+                      ))
+                    ) : (
+                      <MenuItem disabled>No fonts found</MenuItem>
+                    )}
+                  </Menu>
+                </div>
+              </div>
             </Grid>
           </Grid>
-          <Grid size={{ xs: 12, md: 7.8 }}>
+          <Grid size={{ xs: 12, md: 9 }}>
             <Resume
               showSummary={showSummary}
               selectedColumns={selectedColumns}
               showProfile={showProfile}
               img={avimg}
               textColor={textColor}
+              selectedTheme={selectedTheme}
+              mainboxstateColor={mainboxstateColor}
+              fontFamily={fontFamily}
+              customLines={customLines}
             />
           </Grid>
+          {/* <Grid size={{ xs: 12, md: 1.2 }}>
+            <Positions />
+          </Grid> */}
         </Grid>
       </ThemeProvider>
       <Allmodal />
+      <EditModal />
     </>
   );
 }
@@ -1424,7 +1595,7 @@ const theme = createTheme({
     MuiTypography: {
       styleOverrides: {
         root: {
-          fontSize: "22px",
+          fontSize: "20px",
           fontWeight: 500,
         },
       },

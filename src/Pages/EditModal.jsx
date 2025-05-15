@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Modal,
@@ -15,13 +15,7 @@ import {
   FormControl,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import {
-  addCertificateData,
-  addExperience,
-  addLanguage,
-  addSkills,
-  closeModal,
-} from "../Store/modalSlice";
+import { closeEditModal, updateData } from "../Store/modalSlice";
 import { RxPencil1 } from "react-icons/rx";
 import { Circle } from "@mui/icons-material";
 import { addProfileData } from "../Store/modalSlice";
@@ -50,65 +44,11 @@ const style = {
   outline: "none",
   color: "#ffffff",
 };
-
-function Allmodal() {
-  // const theme = createTheme({
-  //   components: {
-  //     MuiTextField: {
-  //       styleOverrides: {
-  //         root: {
-  //           "& .MuiInputBase-input": {
-  //             color: "white", // Text color inside the input field
-  //           },
-  //           "& .MuiOutlinedInput-root": {
-  //             "& fieldset": {
-  //               borderColor: "white", // Border color
-  //             },
-  //             "&:hover fieldset": {
-  //               borderColor: "white", // Border color on hover
-  //             },
-  //             "&.Mui-focused fieldset": {
-  //               borderColor: "white", // Border color when focused
-  //             },
-  //           },
-  //           "& .MuiInputLabel-root": {
-  //             color: "white", // Label color
-  //           },
-  //           "& .MuiSvgIcon-root": {
-  //             color: "white", // Calendar icon color
-  //           },
-  //         },
-  //       },
-  //     },
-  //     MuiPickersDay: {
-  //       styleOverrides: {
-  //         root: {
-  //           color: "white", // Calendar day color
-  //           "&.Mui-selected": {
-  //             backgroundColor: "white", // Background of selected day
-  //             color: "black", // Text color of selected day
-  //           },
-  //         },
-  //       },
-  //     },
-  //     MuiPaper: {
-  //       styleOverrides: {
-  //         root: {
-  //           backgroundColor: "#333", // Calendar popover background
-  //           color: "white", // Calendar text color
-  //         },
-  //       },
-  //     },
-  //     MuiInputBase: {
-  //       styleOverrides: {
-  //         input: {
-  //           color: "white", // Ensuring input field text color
-  //         },
-  //       },
-  //     },
-  //   },
-  // });
-  const { isOpen, modalType } = useSelector((state) => state.modal);
+function EditModal() {
+  const { editmodalType, isEditOpen } = useSelector((state) => state.modal);
+  const selectedProfileData = useSelector(
+    (state) => state.modal.selectedProfile
+  );
   const [showlabelInput, setShowlabelInput] = useState(false);
   const [network, setNetwork] = useState("");
   const [username, setUsername] = useState("");
@@ -122,126 +62,111 @@ function Allmodal() {
   const [description, setDescription] = useState("");
   const [skillname, setSkillname] = useState("");
   const [skilldescription, setSkillDescription] = useState("");
-  const [skillStrength, setSkillStrength] = useState(1);
-  const [experienceName, setExperienceName] = useState("");
+  const [experienceName, setexperienceName] = useState("");
   const [dateFrom, setdateFrom] = useState(dayjs());
   const [dateTo, setdateTo] = useState(dayjs());
-  const [experienceDescription, setExperienceDescription] = useState("");
+  const [experienceDescription, setexperienceDescription] = useState("");
   const dispatch = useDispatch();
   const [value, setValue] = useState(60);
-  const formData = useSelector((state) => state.form);
-  const handleFormData = (e) => {
-    const { name, value } = e.target;
-    dispatch(updateField({ field: name, value }));
-  };
+
+  // useEffect(() => {}, [selectedProfileData]);
   const handleChange = (event, newValue) => {
     setValue(newValue);
     // Update description based on value
     if (newValue >= 0 && newValue <= 1) {
-      modalType === "skills"
+      editmodalType === "skills"
         ? setSkillDescription("Basic")
         : setDescription("Basic");
     } else if (newValue > 1 && newValue <= 3) {
-      modalType === "skills"
+      editmodalType === "skills"
         ? setSkillDescription("Intermediate")
         : setDescription("Intermediate");
     } else if (newValue > 3 && newValue <= 4) {
-      modalType === "skills"
+      editmodalType === "skills"
         ? setSkillDescription("Fluent")
         : setDescription("Fluent");
     } else if (newValue > 4 && newValue <= 5) {
-      modalType === "skills"
+      editmodalType === "skills"
         ? setSkillDescription("Excellent")
         : setDescription("Excellent");
     }
   };
-  const handleCreate = () => {
-    const newProfile = {
-      network,
-      username,
-      websitelink,
-      imgUrl,
-    };
 
-    dispatch(addProfileData(newProfile));
-    console.log("aaaa", newProfile);
-    // Optional: Reset form
-    setNetwork("");
-    setUsername("");
-    setWebsitelink("");
-    setImgUrl("");
-    dispatch(closeModal());
-  };
-  const handleCreateCertificate = () => {
-    const date = dayjs(certificationdate).format("MM-DD-YYYY");
-    const newcertificate = {
-      name,
-      issuer,
-      date,
-      certificationWeb,
-    };
-    dispatch(addCertificateData(newcertificate));
-    console.log(newcertificate, "ffdsf");
-    setName("");
-    setIssuer("");
-    setCertificationDate("");
-    setCertificationWeb("");
-    dispatch(closeModal());
-  };
-  const AddLanguage = () => {
-    if (language.trim() === "" || description.trim() === "") {
-      enqueueSnackbar("Please fill all fields", { variant: "warning" });
-      return; // Stop further execution
+  useEffect(() => {
+    if (selectedProfileData?.data) {
+      setNetwork(selectedProfileData.data.network || "");
+      setUsername(selectedProfileData.data.username || "");
+      setWebsitelink(selectedProfileData.data.websitelink || "");
+      setImgUrl(selectedProfileData.data.imgUrl || "");
+      setexperienceName(selectedProfileData?.data?.experienceName);
+      setexperienceDescription(
+        selectedProfileData?.data?.experienceDescription
+      );
+      setdateFrom(dayjs(selectedProfileData?.data?.datefrom));
+      setdateTo(dayjs(selectedProfileData?.data?.dateto));
     }
-    const newData = {
-      language,
-      description,
-    };
-    dispatch(addLanguage(newData));
-    setlanguage("");
-    setDescription("");
-    setValue("");
-    dispatch(closeModal());
-  };
-  const AddSkills = () => {
-    if (skillname.trim() === "" || skilldescription.trim() === "") {
-      enqueueSnackbar("Please fill all fields", { variant: "warning" });
-      return; // Stop further execution
-    }
-    const newData = {
-      skillname,
-      skilldescription,
-    };
-    dispatch(addSkills(newData));
-    setSkillname("");
-    setSkillDescription("");
-    setValue("");
-    dispatch(closeModal());
-  };
-  const CreateExperience = () => {
-    if (experienceName.trim() === "" || experienceDescription === "") {
-      enqueueSnackbar("Please fill all fields", { variant: "warning" });
-      return;
-    }
+  }, [selectedProfileData]);
+
+  const handleUpdate = () => {
+    // debugger;
+    if (selectedProfileData?.index === undefined) return;
+
+    let updatedData;
     const datefrom = dayjs(dateFrom).format("MM-DD-YYYY");
     const dateto = dayjs(dateTo).format("MM-DD-YYYY");
-    const experienceData = {
-      experienceName,
-      experienceDescription,
-      datefrom,
-      dateto,
-    };
-    dispatch(addExperience(experienceData));
-    setExperienceDescription("");
-    setExperienceName("");
-    setdateFrom("");
-    setdateTo("");
-    dispatch(closeModal());
+    // Conditionally prepare payloads
+    switch (editmodalType) {
+      case "certificate":
+        const date = dayjs(certificationdate).format("MM-DD-YYYY");
+        updatedData = {
+          name,
+          issuer,
+          date,
+          certificationWeb,
+        };
+        break;
+      case "profiles":
+        updatedData = {
+          network,
+          username,
+          websitelink,
+          imgUrl,
+        };
+        break;
+      case "experience":
+        updatedData = {
+          experienceName,
+          experienceDescription,
+          datefrom,
+          dateto,
+        };
+        break;
+
+      case "skills":
+        updatedData = {
+          skillname,
+          skilldescription,
+        };
+        break;
+
+      default:
+        return;
+    }
+    console.log(updateData.network, "updated data");
+
+    dispatch(
+      updateData({
+        type: editmodalType,
+        index: selectedProfileData.index,
+        updatedData,
+      })
+    );
+
+    dispatch(closeEditModal());
   };
 
-  if (!open) return null;
   const renderModalContent = () => {
-    switch (modalType) {
+    switch (editmodalType) {
       case "profiles":
         return (
           <Grid container spacing={1}>
@@ -251,6 +176,7 @@ function Allmodal() {
                 fullWidth
                 placeholder="GitHub"
                 value={network}
+                // defaultValue={selectedProfileData?.data?.network}
                 onChange={(e) => setNetwork(e.target.value)}
               />
             </Grid>
@@ -260,11 +186,12 @@ function Allmodal() {
                 fullWidth
                 placeholder="John.wickles"
                 value={username}
+                // defaultValue={selectedProfileData?.data?.username}
                 onChange={(e) => setUsername(e.target.value)}
               />
             </Grid>
-            <Grid size={{ xs: 12 }}>
-              <Typography>{formData?.label}</Typography>
+            <Grid container size={{ xs: 12 }}>
+              <Typography>Website</Typography>
               <Box
                 sx={{
                   display: "flex",
@@ -276,6 +203,7 @@ function Allmodal() {
                   sx={{ width: "90%" }}
                   placeholder="https://github.com/johnwickles"
                   value={websitelink}
+                  // defaultValue={selectedProfileData?.data?.websitelink}
                   onChange={(e) => setWebsitelink(e.target.value)}
                 />
 
@@ -290,8 +218,6 @@ function Allmodal() {
                 {showlabelInput && (
                   <TextField
                     name="label"
-                    value={formData?.label}
-                    onChange={handleFormData}
                     placeholder="Label"
                     sx={{
                       position: "absolute",
@@ -320,6 +246,7 @@ function Allmodal() {
                     fullWidth
                     placeholder="github"
                     value={imgUrl}
+                    // defaultValue={selectedProfileData?.data?.imgUrl}
                     onChange={(e) => setImgUrl(e.target.value)}
                   />
                   <Typography
@@ -353,10 +280,11 @@ function Allmodal() {
                   color: "black",
                   fontWeight: 600,
                   textTransform: "none",
+                  cursor: "pointer",
                 }}
-                onClick={handleCreate}
+                onClick={() => handleUpdate("profiles")}
               >
-                Create
+                Update Profile
               </Button>
             </Box>
           </Grid>
@@ -415,7 +343,7 @@ function Allmodal() {
                   fontWeight: 600,
                   textTransform: "none",
                 }}
-                onClick={AddLanguage}
+                // onClick={AddLanguage}
               >
                 Add
               </Button>
@@ -476,7 +404,7 @@ function Allmodal() {
                   fontWeight: 600,
                   textTransform: "none",
                 }}
-                onClick={AddSkills}
+                // onClick={AddSkills}
               >
                 Add Skills
               </Button>
@@ -496,7 +424,7 @@ function Allmodal() {
                 fullWidth
                 placeholder="MaxRemind"
                 value={experienceName}
-                onChange={(e) => setExperienceName(e.target.value)}
+                onChange={(e) => setexperienceName(e.target.value)}
               />
             </Grid>
             <Grid size={{ xs: 12, md: 6 }}>
@@ -504,38 +432,72 @@ function Allmodal() {
               <TextField
                 fullWidth
                 value={experienceDescription}
-                onChange={(e) => setExperienceDescription(e.target.value)}
+                onChange={(e) => setexperienceDescription(e.target.value)}
               />
             </Grid>
             <Grid size={{ xs: 12, md: 6 }}>
               <Typography>Date From</Typography>
 
-              {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={["DatePicker"]}>
                   <DatePicker
                     disableFuture
-                    sx={{
-                      "& .MuiInputBase-input": { color: "white" },
-                      "& .MuiInputLabel-root": {
-                        color: "white",
-                      },
-                      "& .MuiPickersDay-root": {
-                        color: "white",
+                    slotProps={{
+                      textField: {
+                        size: "small",
+                        sx: {
+                          // Label color
+                          "& .MuiInputLabel-root": {
+                            color: "#ffffff",
+                          },
+                          "& .MuiInputLabel-root.Mui-focused": {
+                            color: "#ffffff",
+                          },
+
+                          // Date text color (multiple targets for safety)
+                          "& input": {
+                            color: "#ffffff",
+                            backgroundColor: "#000000", // Set it explicitly
+                            "-webkit-text-fill-color": "#ffffff", // This is the key!
+                            transition: "background-color 5000s ease-in-out 0s",
+                          },
+                          "& .MuiInputBase-input": {
+                            color: "#ffffff",
+                          },
+
+                          // Background and border
+                          "& .MuiOutlinedInput-root": {
+                            backgroundColor: "#000000",
+                            "& fieldset": {
+                              borderColor: "#ffffff",
+                            },
+                            "&:hover fieldset": {
+                              borderColor: "#ffffff",
+                            },
+                            "&.Mui-focused fieldset": {
+                              borderColor: "#0E6368",
+                            },
+                          },
+
+                          // Calendar icon
+                          "& .MuiSvgIcon-root": {
+                            color: "#ffffff",
+                            fontSize: "16px",
+                          },
+
+                          width: "100%",
+                          height: "40px",
+                          overflow: "hidden",
+                        },
                       },
                     }}
+                    value={dayjs(dateFrom)}
                     onChange={(newValue) => {
                       setdateFrom(newValue);
                     }}
                   />
                 </DemoContainer>
-              </LocalizationProvider> */}
-              <ThemeProvider theme={theme}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    renderInput={(params) => <TextField {...params} />}
-                  />
-                </LocalizationProvider>
-              </ThemeProvider>
+              </LocalizationProvider>
             </Grid>
             <Grid size={{ xs: 12, md: 6 }}>
               <Typography>Date To</Typography>
@@ -543,6 +505,7 @@ function Allmodal() {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={["DatePicker"]}>
                   <DatePicker
+                    value={dayjs(dateTo)}
                     disableFuture
                     slotProps={{
                       textField: {
@@ -620,9 +583,9 @@ function Allmodal() {
                   fontWeight: 600,
                   textTransform: "none",
                 }}
-                onClick={CreateExperience}
+                onClick={() => handleUpdate("experience")}
               >
-                Create
+                Update {editmodalType}
               </Button>
             </Box>
           </Grid>
@@ -639,7 +602,8 @@ function Allmodal() {
               <TextField
                 fullWidth
                 placeholder="john"
-                value={name}
+                // value={name}
+                defaultValue={selectedProfileData?.data?.name}
                 onChange={(e) => setName(e.target.value)}
               />
             </Grid>
@@ -648,7 +612,8 @@ function Allmodal() {
               <TextField
                 fullWidth
                 placeholder="John wick"
-                value={issuer}
+                // value={issuer}
+                defaultValue={selectedProfileData?.data?.issuer}
                 onChange={(e) => setIssuer(e.target.value)}
               />
             </Grid>
@@ -659,6 +624,7 @@ function Allmodal() {
                 <DemoContainer components={["DatePicker"]}>
                   <DatePicker
                     disableFuture
+                    defaultValue={dayjs(selectedProfileData?.data?.date)}
                     slotProps={{
                       textField: {
                         size: "small",
@@ -714,88 +680,6 @@ function Allmodal() {
                   />
                 </DemoContainer>
               </LocalizationProvider>
-              {/* <FormControl
-                variant="standard"
-                sx={{
-                  mr: {
-                    md: 0,
-                    sm: 1.5,
-                    xs: 0,
-                  },
-                  minWidth: {
-                    md: 120,
-                    xs: 80,
-                    sm: 130,
-                  },
-                }}
-              >
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    // value={deadline}
-                    label="Due Date"
-                    // onChange={(newValue) => setDeadline(newValue)}
-                    renderInput={(params) => (
-                      <TextField
-                        variant="standard"
-                        {...params}
-                        onKeyDown={handleKeyDown}
-                      />
-                    )}
-                    sx={{
-                      "& .MuiInputBase-input": {
-                        color: "yellow", // This sets the date text color
-                      },
-                      "& .MuiInputLabel-root": {
-                        fontSize: "18px",
-                        mt: "-10px",
-                        color: "green",
-                      },
-                      "& .MuiInputLabel-shrink": {
-                        mt: "0px",
-                        fontSize: "16px",
-                        color: "red",
-                      },
-                      "& .MuiOutlinedInput-root": {
-                        borderRadius: "7px",
-                        fontSize: "13px",
-                        height: "35px",
-
-                        width: {
-                          md: "180px",
-                          xs: "100%",
-                          sm: "130px",
-                        },
-                        "&:hover .MuiOutlinedInput-notchedOutline": {
-                          borderColor: "transparent",
-                          borderRightColor: "#ACACAC",
-                          borderBottomColor: "#ACACAC",
-                          borderTopColor: "#ACACAC",
-                          borderLeft: "6px solid #085F99",
-                        },
-                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                          borderColor: "transparent",
-                          borderRightColor: "#ACACAC",
-                          borderBottomColor: "#ACACAC",
-                          borderTopColor: "#ACACAC",
-                          borderLeft: "6px solid #085F99",
-                        },
-                        "& .MuiOutlinedInput-notchedOutline": {
-                          borderColor: "transparent",
-                          borderRightColor: "#ACACAC",
-                          borderBottomColor: "#ACACAC",
-                          borderLeft: "6px solid #085F99",
-                          borderTopColor: "#ACACAC",
-                        },
-                      },
-
-                      "& .MuiSvgIcon-root": {
-                        fontSize: 18,
-                        color: "white",
-                      },
-                    }}
-                  />
-                </LocalizationProvider>
-              </FormControl> */}
             </Grid>
             <Grid container size={{ xs: 12, md: 6 }}>
               <Typography>Website</Typography>
@@ -809,7 +693,8 @@ function Allmodal() {
                 <TextField
                   sx={{ width: "90%" }}
                   placeholder="https://udemy.com/certificate"
-                  value={certificationWeb}
+                  // value={certificationWeb}
+                  defaultValue={selectedProfileData?.data?.certificationWeb}
                   onChange={(e) => setCertificationWeb(e.target.value)}
                 />
 
@@ -858,9 +743,9 @@ function Allmodal() {
                   fontWeight: 600,
                   textTransform: "none",
                 }}
-                onClick={handleCreateCertificate}
+                onClick={() => handleUpdate("certificate")}
               >
-                Create
+                Update {editmodalType}
               </Button>
             </Box>
           </Grid>
@@ -873,7 +758,7 @@ function Allmodal() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Modal open={isOpen} onClose={() => dispatch(closeModal())}>
+      <Modal open={isEditOpen} onClose={() => dispatch(closeEditModal())}>
         <Box sx={style}>
           <Box
             display="flex"
@@ -886,9 +771,9 @@ function Allmodal() {
               component="h2"
               sx={{ textTransform: "capitalize" }}
             >
-              {modalType} Modal
+              Edit {editmodalType}
             </Typography>
-            <IconButton onClick={() => dispatch(closeModal())}>
+            <IconButton onClick={() => dispatch(closeEditModal())}>
               <CloseIcon sx={{ color: "white" }} />
             </IconButton>
           </Box>
@@ -899,7 +784,7 @@ function Allmodal() {
   );
 }
 
-export default Allmodal;
+export default EditModal;
 const theme = createTheme({
   components: {
     MuiTextField: {
@@ -988,32 +873,6 @@ const theme = createTheme({
         },
         icon: {
           color: "#1976d2", // Change dropdown arrow color
-        },
-      },
-    },
-    MuiPickersDay: {
-      styleOverrides: {
-        root: {
-          color: "white", // Calendar day color
-          "&.Mui-selected": {
-            backgroundColor: "white", // Background of selected day
-            color: "black", // Text color of selected day
-          },
-        },
-      },
-    },
-    MuiPaper: {
-      styleOverrides: {
-        root: {
-          backgroundColor: "#333", // Calendar popover background
-          color: "white", // Calendar text color
-        },
-      },
-    },
-    MuiInputBase: {
-      styleOverrides: {
-        input: {
-          color: "white", // Ensuring input field text color
         },
       },
     },

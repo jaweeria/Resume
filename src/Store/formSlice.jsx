@@ -9,7 +9,7 @@ const initialState = {
   phone: "",
   website: "",
   location: "",
-  label: "",
+  label: "website",
   summary: "",
   title: "Summary",
 };
