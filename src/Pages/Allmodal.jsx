@@ -11,8 +11,9 @@ import {
   createTheme,
   ThemeProvider,
   Button,
-  LinearProgress,
-  FormControl,
+  Dialog,
+  DialogContent,
+  DialogTitle,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import {
@@ -510,17 +511,48 @@ function Allmodal() {
             <Grid size={{ xs: 12, md: 6 }}>
               <Typography>Date From</Typography>
 
-              {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={["DatePicker"]}>
                   <DatePicker
                     disableFuture
-                    sx={{
-                      "& .MuiInputBase-input": { color: "white" },
-                      "& .MuiInputLabel-root": {
-                        color: "white",
-                      },
-                      "& .MuiPickersDay-root": {
-                        color: "white",
+                    slotProps={{
+                      textField: {
+                        size: "small",
+                        sx: {
+                          // Date text color (multiple targets for safety)
+                          "& input": {
+                            color: "yellow", // Normal text color
+                            WebkitTextFillColor: "#ffffff",
+                          },
+                          "& .MuiInputBase-input": {
+                            color: "#fffffff",
+                          },
+
+                          // Background and border
+                          "& .MuiOutlinedInput-root": {
+                            // backgroundColor: "#000000",
+                            "& fieldset": {
+                              border: "1.5px solid rgb(39, 42, 43)",
+                            },
+                            "&:hover fieldset": {
+                              border: "1.5px solid rgb(39, 42, 43)",
+                            },
+                            "&.Mui-focused fieldset": {
+                              border: "1.5px solid rgb(39, 42, 43)",
+                            },
+                          },
+
+                          // Calendar icon
+                          "& .MuiSvgIcon-root": {
+                            color: "#ffffff",
+                            fontSize: "16px",
+                          },
+
+                          width: "100%",
+                          height: "40px",
+                          overflow: "hidden",
+                          border: "1.5px solid rgb(39, 42, 43)",
+                        },
                       },
                     }}
                     onChange={(newValue) => {
@@ -528,14 +560,13 @@ function Allmodal() {
                     }}
                   />
                 </DemoContainer>
+              </LocalizationProvider>
+
+              {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  renderInput={(params) => <TextField {...params} />}
+                />
               </LocalizationProvider> */}
-              <ThemeProvider theme={theme}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    renderInput={(params) => <TextField {...params} />}
-                  />
-                </LocalizationProvider>
-              </ThemeProvider>
             </Grid>
             <Grid size={{ xs: 12, md: 6 }}>
               <Typography>Date To</Typography>
@@ -873,28 +904,48 @@ function Allmodal() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Modal open={isOpen} onClose={() => dispatch(closeModal())}>
-        <Box sx={style}>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            mb={2}
+      <Dialog
+        open={isOpen}
+        onClose={() => dispatch(closeModal())}
+        PaperProps={{
+          sx: {
+            bgcolor: "#09090b",
+            borderRadius: 2,
+            width: 500,
+            color: "#ffffff",
+          },
+        }}
+      >
+        <DialogTitle
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            pb: 0,
+          }}
+        >
+          <Typography
+            variant="h6"
+            component="h2"
+            sx={{ textTransform: "capitalize" }}
           >
-            <Typography
-              variant="h6"
-              component="h2"
-              sx={{ textTransform: "capitalize" }}
-            >
-              {modalType} Modal
-            </Typography>
-            <IconButton onClick={() => dispatch(closeModal())}>
-              <CloseIcon sx={{ color: "white" }} />
-            </IconButton>
-          </Box>
+            {modalType} Modal
+          </Typography>
+          <IconButton onClick={() => dispatch(closeModal())}>
+            <CloseIcon sx={{ color: "white" }} />
+          </IconButton>
+        </DialogTitle>
+
+        <DialogContent
+          sx={{
+            pt: 2,
+            px: 4,
+            pb: 4,
+          }}
+        >
           {renderModalContent()}
-        </Box>
-      </Modal>
+        </DialogContent>
+      </Dialog>
     </ThemeProvider>
   );
 }
@@ -902,6 +953,15 @@ function Allmodal() {
 export default Allmodal;
 const theme = createTheme({
   components: {
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          backgroundColor: "#09090b",
+          color: "#ffffff",
+          borderRadius: 8,
+        },
+      },
+    },
     MuiTextField: {
       styleOverrides: {
         root: {
@@ -958,6 +1018,7 @@ const theme = createTheme({
         root: {
           // border: "1.5px solid #0E6368",
           width: { xs: "90%", md: "100px" },
+          border: "1.5px solid rgb(39, 42, 43)",
           "&:hover .MuiOutlinedInput-notchedOutline": {
             border: "1.5px solid rgb(26, 27, 27)",
           },
@@ -991,17 +1052,17 @@ const theme = createTheme({
         },
       },
     },
-    MuiPickersDay: {
-      styleOverrides: {
-        root: {
-          color: "white", // Calendar day color
-          "&.Mui-selected": {
-            backgroundColor: "white", // Background of selected day
-            color: "black", // Text color of selected day
-          },
-        },
-      },
-    },
+    // MuiPickersDay: {
+    //   styleOverrides: {
+    //     root: {
+    //       color: "white", // Calendar day color
+    //       "&.Mui-selected": {
+    //         backgroundColor: "white", // Background of selected day
+    //         color: "white", // Text color of selected day
+    //       },
+    //     },
+    //   },
+    // },
     MuiPaper: {
       styleOverrides: {
         root: {

@@ -193,7 +193,8 @@ function Resume({
                       sx={{
                         ml: 0.5,
                         fontSize: "12px",
-                        // color: textColor,
+                        //    color: textColor,
+                        fontFamily: fontFamily,
                         fontWeight: 700,
                       }}
                     >
@@ -207,10 +208,11 @@ function Resume({
             </Box>
           </span>
         </Box>
-
+        {/* custom line */}
         <Rnd
           default={{ x: 50, y: 100, width: 300, height: 80 }}
           // bounds={"window"}
+          style={{ padding: 1, border: "1px solid black" }}
         >
           {showSummary && (
             <Box
@@ -235,6 +237,7 @@ function Resume({
                     width: "100%",
                     display: "flex",
                     color: textColor,
+                    fontFamily: fontFamily,
                   }}
                 >
                   {formData?.title}
@@ -248,9 +251,9 @@ function Resume({
                   p: 1,
                   columnCount: selectedColumns,
                   width: "80%",
-                  fontFamily: fontFamily,
                   fontSize: "14px",
                   color: textColor,
+                  fontFamily: fontFamily,
                 }}
                 dangerouslySetInnerHTML={{ __html: formData?.summary }}
               />
@@ -269,346 +272,376 @@ function Resume({
             <Box key={line?.id} sx={{ mx: 1, border: "0.2px solid black" }} />
           </Rnd>
         ))}
-        <Rnd
-          default={{ x: 100, y: 100, width: 300, height: 80 }}
-          bounds={"window"}
-        >
-          {showProfile && profiles?.length > 0 && (
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-
-                p: 1.5,
-                fontFamily: fontFamily,
-              }}
-            >
+        {/* profile part */}
+        {showProfile && profiles?.length > 0 && (
+          <Rnd
+            default={{ x: 100, y: 100, width: 300, height: 80 }}
+            bounds={"window"}
+            style={{ padding: 1, border: "1px solid black" }}
+          >
+            {showProfile && profiles?.length > 0 && (
               <Box
-                sx={
-                  {
-                    // borderBottom: `1px solid black`,
-                    // mb: 1,
-                  }
-                }
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  p: 1.5,
+                  fontFamily: fontFamily,
+                }}
               >
-                <Typography
-                  sx={{
-                    fontSize: "14px",
-                    fontWeight: 600,
-                    color: textColor,
-                  }}
-                >
-                  Profile
-                </Typography>
-              </Box>
-
-              {profiles.map((profile, index) => (
                 <Box
-                  key={index}
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: 0.5,
-                    mb: 0.5,
-                    width: "fit-content",
-                    maxWidth: "100%",
-                  }}
+                  sx={
+                    {
+                      // borderBottom: `1px solid black`,
+                      // mb: 1,
+                    }
+                  }
                 >
-                  <Box
+                  <Typography
                     sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 2,
+                      fontSize: "14px",
+                      fontWeight: 600,
+                      color: textColor,
+                      fontFamily: fontFamily,
                     }}
                   >
-                    {profile.imgUrl && <Avatar src={`${profile.imgUrl}.png`} />}
+                    Profile
+                  </Typography>
+                </Box>
+
+                {profiles.map((profile, index) => (
+                  <Box
+                    key={index}
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 0.5,
+                      mb: 0.5,
+                      width: "fit-content",
+                      maxWidth: "100%",
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 2,
+                      }}
+                    >
+                      {profile.imgUrl && (
+                        <Avatar src={`${profile.imgUrl}.png`} />
+                      )}
+                      <Typography
+                        sx={{
+                          fontSize: "14px",
+                          fontWeight: 400,
+                          color: textColor,
+                          fontFamily: fontFamily,
+                        }}
+                      >
+                        {profile.username}
+                      </Typography>
+                    </Box>
                     <Typography
                       sx={{
                         fontSize: "14px",
                         fontWeight: 400,
                         color: textColor,
+                        fontFamily: fontFamily,
                       }}
                     >
-                      {profile.username}
+                      {profile.network}
                     </Typography>
-                  </Box>
-                  <Typography
-                    sx={{
-                      fontSize: "14px",
-                      fontWeight: 400,
-                      color: textColor,
-                    }}
-                  >
-                    {profile.network}
-                  </Typography>
-                  <Link
-                    href={profile.websitelink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    underline="hover"
-                    sx={{
-                      fontSize: "14px",
-                      fontWeight: 400,
-                      color: textColor,
-                    }}
-                  >
-                    {profile.websitelink}
-                  </Link>
-                </Box>
-              ))}
-            </Box>
-          )}
-        </Rnd>
-
-        <Rnd
-          default={{ x: 100, y: 100, width: 300, height: 80 }}
-          bounds={"window"}
-        >
-          {certificate?.length > 0 && (
-            <Box sx={{ width: "100%", p: 2 }}>
-              <Typography
-                sx={{
-                  // borderBottom: "1px solid rgb(0, 0, 0)",
-                  // pb: 1,
-                  mb: 0.5,
-                  color: textColor,
-                  fontSize: "15px",
-                  fontWeight: 600,
-                }}
-              >
-                Certificates
-              </Typography>
-
-              <Grid container spacing={2}>
-                {certificate.map((certi, index) => (
-                  <Grid item xs={12} sm={6} md={3} key={index}>
-                    <Box
+                    <Link
+                      href={profile.websitelink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      underline="hover"
                       sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 1,
-                        p: 1.5,
-                        // bgcolor: "white",
-                        borderRadius: 2,
-                        boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-                        height: "100%",
-                        transition: "transform 0.2s",
-                        "&:hover": {
-                          transform: "scale(1.00)",
-                        },
+                        fontSize: "14px",
+                        fontWeight: 400,
+                        color: textColor,
+                        fontFamily: fontFamily,
                       }}
                     >
-                      <Typography
+                      {profile.websitelink}
+                    </Link>
+                  </Box>
+                ))}
+              </Box>
+            )}
+          </Rnd>
+        )}
+        {/* certificate part */}
+        {certificate?.length > 0 && (
+          <Rnd
+            default={{ x: 100, y: 100, width: 300, height: 80 }}
+            bounds={"window"}
+            style={{ padding: 1, border: "1px solid black" }}
+          >
+            {certificate?.length > 0 && (
+              <Box sx={{ width: "100%", p: 2 }}>
+                <Typography
+                  sx={{
+                    // borderBottom: "1px solid rgb(0, 0, 0)",
+                    // pb: 1,
+                    mb: 0.5,
+                    color: textColor,
+                    fontFamily: fontFamily,
+                    fontSize: "15px",
+                    fontWeight: 600,
+                  }}
+                >
+                  Certificates
+                </Typography>
+
+                <Grid container spacing={2}>
+                  {certificate.map((certi, index) => (
+                    <Grid item xs={12} sm={6} md={3} key={index}>
+                      <Box
                         sx={{
-                          fontWeight: "bold",
-                          fontSize: "15px",
-                          color: textColor,
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 1,
+                          p: 1.5,
+                          // bgcolor: "white",
+                          borderRadius: 2,
+                          boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+                          height: "100%",
+                          transition: "transform 0.2s",
+                          "&:hover": {
+                            transform: "scale(1.00)",
+                          },
                         }}
                       >
-                        {certi?.name}
-                      </Typography>
-
-                      {certi?.certificationWeb && (
                         <Typography
-                          component="a"
-                          href={certi.certificationWeb}
-                          target="_blank"
-                          rel="noopener noreferrer"
                           sx={{
+                            fontWeight: "bold",
+                            fontSize: "15px",
                             color: textColor,
-                            textDecoration: "underline",
-                            fontSize: "13px",
+                            fontFamily: fontFamily,
                           }}
                         >
-                          View Certificate
+                          {certi?.name}
                         </Typography>
-                      )}
 
-                      <Typography sx={{ fontSize: "14px", color: textColor }}>
-                        Issued by: <strong>{certi.issuer}</strong>
-                      </Typography>
-                      <Typography sx={{ fontSize: "13px", color: textColor }}>
-                        Date: {certi.date}
-                      </Typography>
-                    </Box>
-                  </Grid>
-                ))}
-              </Grid>
-            </Box>
-          )}
-        </Rnd>
+                        {certi?.certificationWeb && (
+                          <Typography
+                            component="a"
+                            href={certi.certificationWeb}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            sx={{
+                              color: textColor,
+                              fontFamily: fontFamily,
+                              textDecoration: "underline",
+                              fontSize: "13px",
+                            }}
+                          >
+                            View Certificate
+                          </Typography>
+                        )}
 
-        <Rnd
-          default={{ x: 100, y: 100, width: 300, height: 80 }}
-          bounds={"window"}
-        >
-          {Skills?.length > 0 && (
-            <Box sx={{ width: "100%", p: 2 }}>
-              <Typography
-                sx={{
-                  // borderBottom: "1px solid rgb(0, 0, 0)",
-                  // pb: 1,
-                  mb: 0.5,
-                  color: textColor,
-                  fontSize: "15px",
-                  fontWeight: 600,
-                }}
-              >
-                Skills
-              </Typography>
+                        <Typography sx={{ fontSize: "14px", color: textColor }}>
+                          Issued by: <strong>{certi.issuer}</strong>
+                        </Typography>
+                        <Typography sx={{ fontSize: "13px", color: textColor }}>
+                          Date: {certi.date}
+                        </Typography>
+                      </Box>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
+            )}
+          </Rnd>
+        )}
+        {/* Skills part */}
+        {Skills?.length > 0 && (
+          <Rnd
+            default={{ x: 100, y: 100, width: 300, height: 80 }}
+            bounds={"window"}
+            style={{ padding: 1, border: "1px solid black" }}
+          >
+            {Skills?.length > 0 && (
+              <Box sx={{ width: "100%", p: 2 }}>
+                <Typography
+                  sx={{
+                    // borderBottom: "1px solid rgb(0, 0, 0)",
+                    // pb: 1,
+                    mb: 0.5,
+                    color: textColor,
+                    fontFamily: fontFamily,
+                    fontSize: "15px",
+                    fontWeight: 600,
+                  }}
+                >
+                  Skills
+                </Typography>
 
-              <Grid container spacing={2}>
-                {Skills.map((item, index) => (
-                  <Grid item xs={12} sm={6} md={3} key={index}>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 1,
-                        p: 1.5,
-                        // bgcolor: "white",
-                        borderRadius: 2,
-                        height: "100%",
-                      }}
-                    >
-                      <Typography
+                <Grid container spacing={2}>
+                  {Skills.map((item, index) => (
+                    <Grid item xs={12} sm={6} md={3} key={index}>
+                      <Box
                         sx={{
-                          fontWeight: "bold",
-                          fontSize: "15px",
-                          color: textColor,
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 1,
+                          p: 1.5,
+                          // bgcolor: "white",
+                          borderRadius: 2,
+                          height: "100%",
                         }}
                       >
-                        {item?.skillname}
-                      </Typography>
+                        <Typography
+                          sx={{
+                            fontWeight: "bold",
+                            fontSize: "15px",
+                            color: textColor,
+                            fontFamily: fontFamily,
+                          }}
+                        >
+                          {item?.skillname}
+                        </Typography>
 
-                      <Typography sx={{ fontSize: "14px", color: textColor }}>
-                        Descripion: {item.skilldescription}
-                      </Typography>
-                    </Box>
-                  </Grid>
-                ))}
-              </Grid>
-            </Box>
-          )}
-        </Rnd>
+                        <Typography sx={{ fontSize: "14px", color: textColor }}>
+                          Descripion: {item.skilldescription}
+                        </Typography>
+                      </Box>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
+            )}
+          </Rnd>
+        )}
+        {/* Language part */}
+        {language?.length > 0 && (
+          <Rnd
+            default={{ x: 100, y: 100, width: 300, height: 80 }}
+            bounds={"window"}
+            style={{ padding: 1, border: "1px solid black" }}
+          >
+            {language?.length > 0 && (
+              <Box sx={{ width: "100%", p: 2 }}>
+                <Typography
+                  sx={{
+                    // borderBottom: "1px solid rgb(0, 0, 0)",
+                    // pb: 1,
+                    mb: 0.5,
+                    color: textColor,
+                    fontFamily: fontFamily,
+                    fontSize: "15px",
+                    fontWeight: 600,
+                  }}
+                >
+                  Language
+                </Typography>
 
-        <Rnd
-          default={{ x: 100, y: 100, width: 300, height: 80 }}
-          bounds={"window"}
-        >
-          {language?.length > 0 && (
-            <Box sx={{ width: "100%", p: 2 }}>
-              <Typography
-                sx={{
-                  // borderBottom: "1px solid rgb(0, 0, 0)",
-                  // pb: 1,
-                  mb: 0.5,
-                  color: textColor,
-                  fontSize: "15px",
-                  fontWeight: 600,
-                }}
-              >
-                Language
-              </Typography>
-
-              <Grid container spacing={2}>
-                {language.map((item, index) => (
-                  <Grid item xs={12} sm={6} md={3} key={index}>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 1,
-                        p: 1.5,
-                        // bgcolor: "white",
-                        borderRadius: 2,
-                        height: "100%",
-                      }}
-                    >
-                      <Typography
+                <Grid container spacing={2}>
+                  {language.map((item, index) => (
+                    <Grid item xs={12} sm={6} md={3} key={index}>
+                      <Box
                         sx={{
-                          fontWeight: "bold",
-                          fontSize: "15px",
-                          color: textColor,
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 1,
+                          p: 1.5,
+                          // bgcolor: "white",
+                          borderRadius: 2,
+                          height: "100%",
                         }}
                       >
-                        {item?.language}
-                      </Typography>
+                        <Typography
+                          sx={{
+                            fontWeight: "bold",
+                            fontSize: "15px",
+                            color: textColor,
+                            fontFamily: fontFamily,
+                          }}
+                        >
+                          {item?.language}
+                        </Typography>
 
-                      <Typography sx={{ fontSize: "14px", color: textColor }}>
-                        Descripion: {item.description}
-                      </Typography>
-                    </Box>
-                  </Grid>
-                ))}
-              </Grid>
-            </Box>
-          )}
-        </Rnd>
+                        <Typography sx={{ fontSize: "14px", color: textColor }}>
+                          Descripion: {item.description}
+                        </Typography>
+                      </Box>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
+            )}
+          </Rnd>
+        )}
+        {/* Experience part */}
+        {Experience?.length > 0 && (
+          <Rnd
+            default={{ x: 100, y: 100, width: 300, height: 80 }}
+            bounds={"window"}
+            style={{ padding: 1, border: "1px solid black" }}
+          >
+            {Experience?.length > 0 && (
+              <Box sx={{ width: "100%", p: 2 }}>
+                <Typography
+                  sx={{
+                    // borderBottom: "1px solid rgb(0, 0, 0)",
+                    // pb: 1,
+                    mb: 0.5,
+                    color: textColor,
+                    fontFamily: fontFamily,
+                    fontSize: "15px",
+                    fontWeight: 600,
+                  }}
+                >
+                  Experience
+                </Typography>
 
-        <Rnd
-          default={{ x: 100, y: 100, width: 300, height: 80 }}
-          bounds={"window"}
-        >
-          {Experience?.length > 0 && (
-            <Box sx={{ width: "100%", p: 2 }}>
-              <Typography
-                sx={{
-                  // borderBottom: "1px solid rgb(0, 0, 0)",
-                  // pb: 1,
-                  mb: 0.5,
-                  color: textColor,
-                  fontSize: "15px",
-                  fontWeight: 600,
-                }}
-              >
-                Experience
-              </Typography>
-
-              <Grid container spacing={2}>
-                {Experience.map((experience, index) => (
-                  <Grid item xs={12} sm={6} md={3} key={index}>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 1,
-                        p: 1.5,
-                        // bgcolor: "white",
-                        borderRadius: 2,
-                        boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
-                        height: "100%",
-                        transition: "transform 0.2s",
-                        "&:hover": {
-                          transform: "scale(1.00)",
-                        },
-                      }}
-                    >
-                      <Typography
+                <Grid container spacing={2}>
+                  {Experience.map((experience, index) => (
+                    <Grid item xs={12} sm={6} md={3} key={index}>
+                      <Box
                         sx={{
-                          fontWeight: "bold",
-                          fontSize: "15px",
-                          color: textColor,
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 1,
+                          p: 1.5,
+                          // bgcolor: "white",
+                          borderRadius: 2,
+                          boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+                          height: "100%",
+                          transition: "transform 0.2s",
+                          "&:hover": {
+                            transform: "scale(1.00)",
+                          },
                         }}
                       >
-                        <strong>{experience.experienceName}</strong>
-                      </Typography>
-                      <Typography sx={{ fontSize: "13px", color: textColor }}>
-                        {experience.experienceDescription}
-                      </Typography>
-                      <Typography sx={{ fontSize: "13px", color: textColor }}>
-                        Date From: {experience.datefrom}
-                      </Typography>
-                      <Typography sx={{ fontSize: "13px", color: textColor }}>
-                        Date To: {experience.dateto}
-                      </Typography>
-                    </Box>
-                  </Grid>
-                ))}
-              </Grid>
-            </Box>
-          )}
-        </Rnd>
+                        <Typography
+                          sx={{
+                            fontWeight: "bold",
+                            fontSize: "15px",
+                            color: textColor,
+                            fontFamily: fontFamily,
+                          }}
+                        >
+                          <strong>{experience.experienceName}</strong>
+                        </Typography>
+                        <Typography sx={{ fontSize: "13px", color: textColor }}>
+                          {experience.experienceDescription}
+                        </Typography>
+                        <Typography sx={{ fontSize: "13px", color: textColor }}>
+                          Date From: {experience.datefrom}
+                        </Typography>
+                        <Typography sx={{ fontSize: "13px", color: textColor }}>
+                          Date To: {experience.dateto}
+                        </Typography>
+                      </Box>
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
+            )}
+          </Rnd>
+        )}
       </Grid>
       <Box
         sx={{

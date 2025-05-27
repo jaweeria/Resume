@@ -247,6 +247,11 @@ function ResumeBasics() {
   };
   const handleFormData = (e) => {
     const { name, value } = e.target;
+    // Allow only digits
+    if (name === "phone") {
+      // Allow only digits and limit to 11 characters
+      if (!/^\d*$/.test(value) || value.length > 11) return;
+    }
     dispatch(updateField({ field: name, value }));
   };
   const handleSummaryChange = (value) => {
@@ -500,9 +505,13 @@ function ResumeBasics() {
                 </Typography>
                 <TextField
                   name="phone"
-                  type="number"
+                  type="tel"
                   value={formData?.phone}
                   onChange={handleFormData}
+                  inputProps={{
+                    inputMode: "numeric",
+                    pattern: "[0-9]{10}", // Adjust as needed for your format
+                  }}
                   sx={{
                     width: { xs: "90%", md: "170px" },
                   }}
