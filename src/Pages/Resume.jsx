@@ -4,19 +4,16 @@ import {
   Box,
   Avatar,
   Button,
-  createTheme,
-  ThemeProvider,
   Divider,
   Link,
 } from "@mui/material";
 import AttachmentIcon from "@mui/icons-material/Attachment";
 import PhoneIcon from "@mui/icons-material/Phone";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 // import avimg from "../assets/Assets/avater1.png";
 import { createWorker } from "tesseract.js";
 
-import SettingsInputSvideoRoundedIcon from "@mui/icons-material/SettingsInputSvideoRounded";
 import { useSelector } from "react-redux";
 
 import html2canvas from "html2canvas";
@@ -288,25 +285,16 @@ function Resume({
                   fontFamily: fontFamily,
                 }}
               >
-                <Box
-                  sx={
-                    {
-                      // borderBottom: `1px solid black`,
-                      // mb: 1,
-                    }
-                  }
+                <Typography
+                  sx={{
+                    fontSize: "14px",
+                    fontWeight: 600,
+                    color: textColor,
+                    fontFamily: fontFamily,
+                  }}
                 >
-                  <Typography
-                    sx={{
-                      fontSize: "14px",
-                      fontWeight: 600,
-                      color: textColor,
-                      fontFamily: fontFamily,
-                    }}
-                  >
-                    Profile
-                  </Typography>
-                </Box>
+                  Profile
+                </Typography>
 
                 {profiles.map((profile, index) => (
                   <Box
@@ -314,43 +302,51 @@ function Resume({
                     sx={{
                       display: "flex",
                       flexDirection: "column",
+                      alignItems: "flex-start",
                       gap: 0.5,
-                      mb: 0.5,
+                      mb: 1,
+                      px: 1.5,
+                      py: 1,
+                      borderRadius: 2,
+
                       width: "fit-content",
                       maxWidth: "100%",
                     }}
                   >
-                    <Box
+                    {profile.imgUrl && (
+                      <Avatar
+                        src={`${profile.imgUrl}.png`}
+                        alt={profile.username}
+                        sx={{
+                          width: 36,
+                          height: 36,
+                        }}
+                      />
+                    )}
+
+                    <Typography
                       sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 2,
+                        fontSize: "15px",
+                        fontWeight: 600,
+                        color: textColor,
+                        fontFamily: fontFamily,
                       }}
                     >
-                      {profile.imgUrl && (
-                        <Avatar src={`${profile.imgUrl}.png`} />
-                      )}
-                      <Typography
-                        sx={{
-                          fontSize: "14px",
-                          fontWeight: 400,
-                          color: textColor,
-                          fontFamily: fontFamily,
-                        }}
-                      >
-                        {profile.username}
-                      </Typography>
-                    </Box>
+                      {profile.username}
+                    </Typography>
+
                     <Typography
                       sx={{
                         fontSize: "14px",
-                        fontWeight: 400,
+                        fontWeight: 500,
                         color: textColor,
+                        opacity: 0.8,
                         fontFamily: fontFamily,
                       }}
                     >
                       {profile.network}
                     </Typography>
+
                     <Link
                       href={profile.websitelink}
                       target="_blank"
@@ -359,8 +355,13 @@ function Resume({
                       sx={{
                         fontSize: "14px",
                         fontWeight: 400,
-                        color: textColor,
+                        color: "#1976d2",
                         fontFamily: fontFamily,
+                        wordBreak: "break-word",
+                        transition: "color 0.2s",
+                        "&:hover": {
+                          color: "#004ba0",
+                        },
                       }}
                     >
                       {profile.websitelink}

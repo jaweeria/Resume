@@ -17,7 +17,9 @@ import {
   Menu,
   Select,
 } from "@mui/material";
-import PeopleOutlineOutlinedIcon from "@mui/icons-material/PeopleOutlineOutlined";
+import TextFormatIcon from "@mui/icons-material/TextFormat";
+import ColorizeIcon from "@mui/icons-material/Colorize";
+
 import AccountTreeOutlinedIcon from "@mui/icons-material/AccountTreeOutlined";
 import RedeemOutlinedIcon from "@mui/icons-material/RedeemOutlined";
 import MilitaryTechOutlinedIcon from "@mui/icons-material/MilitaryTechOutlined";
@@ -60,6 +62,8 @@ import {
   ArrowBack,
   Circle,
   DeleteRounded,
+  FontDownloadOffOutlined,
+  FontDownloadOutlined,
   Language,
   ShareOutlined,
 } from "@mui/icons-material";
@@ -619,7 +623,11 @@ function ResumeBasics() {
                 >
                   {" "}
                   <CloseIcon
-                    style={{ fontSize: "28px" }}
+                    sx={{
+                      cursor: "pointer",
+                      width: "20px",
+                      height: "20px",
+                    }}
                     onClick={() => handleRemoveField(i)}
                   />{" "}
                 </span>
@@ -890,6 +898,8 @@ function ResumeBasics() {
                           flexDirection: "column",
                           gap: 0.5,
                           mb: 2,
+                          border: "1px solid gray",
+                          p: 0.5,
                         }}
                       >
                         <Box
@@ -908,8 +918,13 @@ function ResumeBasics() {
                               gap: 1,
                             }}
                           >
+                            {" "}
+                            <ViewCompactIcon sx={{ fontSize: "15px" }} />
                             {profile.imgUrl && (
-                              <Avatar src={`${profile.imgUrl}.png`} />
+                              <Avatar
+                                src={`${profile.imgUrl}.png`}
+                                sx={{ height: "28px", width: "28px" }}
+                              />
                             )}
                             <Typography
                               sx={{ fontSize: "14px", fontWeight: 400 }}
@@ -922,14 +937,22 @@ function ResumeBasics() {
                               display: "flex",
                               gap: 2,
                               alignItems: "center",
-                              mr: 2,
                             }}
                           >
                             <CloseIcon
+                              sx={{
+                                cursor: "pointer",
+                                width: "20px",
+                                height: "20px",
+                              }}
                               onClick={() => dispatch(removeProfileData(index))}
                             />
                             <EditIcon
-                              sx={{ width: "20px", height: "20px" }}
+                              sx={{
+                                cursor: "pointer",
+                                width: "20px",
+                                height: "20px",
+                              }}
                               onClick={() => {
                                 dispatch(
                                   setSelectedProfile({ index, data: profile })
@@ -1048,8 +1071,10 @@ function ResumeBasics() {
                         sx={{
                           display: "flex",
                           flexDirection: "column",
-                          gap: 0.5,
-                          mb: 2,
+                          gap: 0.3,
+                          mb: 1,
+                          border: "1px solid gray",
+                          p: 0.5,
                         }}
                       >
                         <Box
@@ -1068,6 +1093,7 @@ function ResumeBasics() {
                               gap: 2,
                             }}
                           >
+                            <ViewCompactIcon sx={{ fontSize: "15px" }} />
                             <Typography
                               sx={{ fontSize: "14px", fontWeight: 400 }}
                             >
@@ -1084,16 +1110,25 @@ function ResumeBasics() {
                               display: "flex",
                               gap: 2,
                               alignItems: "center",
-                              mr: 2,
+                              // mr: 2,
                             }}
                           >
                             <CloseIcon
+                              sx={{
+                                cursor: "pointer",
+                                width: "20px",
+                                height: "20px",
+                              }}
                               onClick={() =>
                                 dispatch(removeCertificateData(index))
                               }
                             />
                             <EditIcon
-                              sx={{ width: "20px", height: "20px" }}
+                              sx={{
+                                cursor: "pointer",
+                                width: "20px",
+                                height: "20px",
+                              }}
                               onClick={() => {
                                 dispatch(
                                   setSelectedProfile({
@@ -1164,6 +1199,8 @@ function ResumeBasics() {
                           flexDirection: "column",
                           gap: 0.5,
                           mb: 2,
+                          border: "1px solid gray",
+                          p: 0.5,
                         }}
                       >
                         <Box
@@ -1182,6 +1219,7 @@ function ResumeBasics() {
                               gap: 2,
                             }}
                           >
+                            <ViewCompactIcon sx={{ fontSize: "15px" }} />
                             <Typography
                               sx={{ fontSize: "14px", fontWeight: 400 }}
                             >
@@ -1193,14 +1231,22 @@ function ResumeBasics() {
                               display: "flex",
                               gap: 2,
                               alignItems: "center",
-                              mr: 2,
                             }}
                           >
                             <CloseIcon
+                              sx={{
+                                cursor: "pointer",
+                                width: "20px",
+                                height: "20px",
+                              }}
                               onClick={() => dispatch(removeExperience(index))}
                             />
                             <EditIcon
-                              sx={{ width: "20px", height: "20px" }}
+                              sx={{
+                                cursor: "pointer",
+                                width: "20px",
+                                height: "20px",
+                              }}
                               onClick={() => {
                                 dispatch(
                                   setSelectedProfile({
@@ -1271,6 +1317,8 @@ function ResumeBasics() {
                           flexDirection: "column",
                           gap: 0.5,
                           mb: 2,
+                          border: "1px solid gray",
+                          p: 0.5,
                         }}
                       >
                         <Box
@@ -1289,6 +1337,7 @@ function ResumeBasics() {
                               gap: 2,
                             }}
                           >
+                            <ViewCompactIcon sx={{ fontSize: "15px" }} />
                             <Typography
                               sx={{ fontSize: "14px", fontWeight: 400 }}
                             >
@@ -1301,7 +1350,11 @@ function ResumeBasics() {
                             </Typography>
                           </Box>
                           <CloseIcon
-                            sx={{ mr: 2.5 }}
+                            sx={{
+                              cursor: "pointer",
+                              width: "20px",
+                              height: "20px",
+                            }}
                             onClick={() => dispatch(removeLanguage(index))}
                           />
                         </Box>
@@ -1363,6 +1416,8 @@ function ResumeBasics() {
                           flexDirection: "column",
                           gap: 0.5,
                           mb: 2,
+                          border: "1px solid gray",
+                          p: 0.5,
                         }}
                       >
                         <Box
@@ -1381,6 +1436,7 @@ function ResumeBasics() {
                               gap: 2,
                             }}
                           >
+                            <ViewCompactIcon sx={{ fontSize: "15px" }} />
                             <Typography
                               sx={{ fontSize: "14px", fontWeight: 400 }}
                             >
@@ -1393,7 +1449,11 @@ function ResumeBasics() {
                             </Typography>
                           </Box>
                           <CloseIcon
-                            sx={{ mr: 2.5 }}
+                            sx={{
+                              cursor: "pointer",
+                              width: "20px",
+                              height: "20px",
+                            }}
                             onClick={() => dispatch(removeSkills(index))}
                           />
                         </Box>
@@ -1412,27 +1472,101 @@ function ResumeBasics() {
             </Grid>
             {/* Theme option */}
             <Grid sx={{ width: "100%" }}>
-              <Typography sx={{ fontSize: "14px", fontWeight: 500 }}>
-                Change Font Color
-              </Typography>
-              {["blue", "black", "#cf485f", "red", "purple", "white"].map(
-                (color) => (
-                  <IconButton
-                    key={color}
-                    onClick={() => handleColorChange(color)}
-                  >
-                    <Circle style={{ color }} />
-                  </IconButton>
-                )
-              )}
+              <Box
+                sx={{
+                  display: "flex",
+                  color: "white",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <span style={{ display: "flex", alignItems: "center", gap: 9 }}>
+                  <ColorizeIcon
+                    style={{ width: "18px", height: "18px", marginRight: 2 }}
+                  />
+                  <Typography>{"Pick Font Color"}</Typography>
+                </span>
+                <IconButton>
+                  <MenuIcon
+                    sx={{ width: "18px", height: "18px", color: "white" }}
+                  />
+                </IconButton>
+              </Box>
+              <Box
+                sx={{
+                  border: "1px solid gray",
+                  display: "flex",
+                  justifyContent: "space-evenly",
+                }}
+              >
+                {" "}
+                {["blue", "black", "#cf485f", "red", "purple", "white"].map(
+                  (color) => (
+                    <IconButton
+                      key={color}
+                      onClick={() => handleColorChange(color)}
+                    >
+                      <Circle style={{ color }} />
+                    </IconButton>
+                  )
+                )}
+              </Box>
+
               <Box>
                 {" "}
-                <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-                  <Typography sx={{ color: "white" }}>Add Line</Typography>
-                  <HorizontalRuleIcon
-                    sx={{ width: "27px", color: "white", cursor: "pointer" }}
-                    onClick={handleAddCustomLine}
-                  />
+                <Box
+                  sx={{
+                    display: "flex",
+                    gap: 1,
+                    flexDirection: "column",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      display: "flex",
+                      color: "white",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <span
+                      style={{ display: "flex", alignItems: "center", gap: 9 }}
+                    >
+                      <AddIcon
+                        style={{
+                          width: "18px",
+                          height: "18px",
+                          marginRight: 2,
+                        }}
+                      />
+                      <Typography>{"Add Line"}</Typography>
+                    </span>
+                    <IconButton>
+                      <MenuIcon
+                        sx={{ width: "18px", height: "18px", color: "white" }}
+                      />
+                    </IconButton>
+                  </Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    {" "}
+                    <Button
+                      endIcon={<HorizontalRuleIcon />}
+                      sx={{
+                        width: "190px",
+                        color: "white",
+                        display: "flex",
+                      }}
+                      onClick={handleAddCustomLine}
+                    >
+                      Add Horizental Line
+                    </Button>
+                  </Box>
                 </Box>
                 {customLines.map((line, i) => (
                   <Box
@@ -1440,32 +1574,91 @@ function ResumeBasics() {
                       display: "flex",
                       color: "white",
                       justifyContent: "space-between",
+                      border: "1px solid gray",
+                      p: 0.5,
+                      mt: 1,
                     }}
                   >
                     {" "}
-                    <Typography sx={{ fontSize: "12px" }} key={line?.id}>
+                    <Typography sx={{ fontSize: "15px" }} key={line?.id}>
                       line {i + 1}{" "}
                     </Typography>
                     <CloseIcon
-                      sx={{ mr: 2.5 }}
+                      sx={{
+                        cursor: "pointer",
+                        width: "20px",
+                        height: "20px",
+                      }}
                       onClick={() => handleRemoveLine(line?.id)}
                     />
                   </Box>
                 ))}
               </Box>
 
-              <div style={{ padding: 10, marginTop: 10 }}>
-                <label style={{ marginRight: 8 }}>Pick a Custom Color:</label>
-                <input
-                  type="color"
-                  value={mainboxstateColor}
-                  onChange={(e) => {
-                    setMainBoxStateColor(e.target.value);
+              <div style={{ marginTop: 20 }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    color: "white",
+                    justifyContent: "space-between",
+                    alignItems: "center",
                   }}
-                />
+                >
+                  <span
+                    style={{ display: "flex", alignItems: "center", gap: 10 }}
+                  >
+                    <ColorizeIcon
+                      style={{ width: "18px", height: "18px", marginRight: 2 }}
+                    />
+                    <Typography>{"Pick Color"}</Typography>
+                    <input
+                      style={{
+                        cursor: "pointer",
+                        width: "60px",
+                        height: "25px",
+                        marginLeft: "10px",
+                      }}
+                      type="color"
+                      value={mainboxstateColor}
+                      onChange={(e) => {
+                        setMainBoxStateColor(e.target.value);
+                      }}
+                    />
+                  </span>
+                  <IconButton
+                  //  onClick={handleIconClick2}
+                  >
+                    <MenuIcon
+                      sx={{ width: "18px", height: "18px", color: "white" }}
+                    />
+                  </IconButton>
+                </Box>
               </div>
-              <div style={{ padding: 10, height: "50px" }}>
-                <label style={{ marginRight: 8 }}>Select Font Style:</label>
+              <div style={{ marginTop: 20, height: "50px" }}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    color: "white",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <span
+                    style={{ display: "flex", alignItems: "center", gap: 9 }}
+                  >
+                    <FontDownloadOutlined
+                      style={{ width: "18px", height: "18px", marginRight: 2 }}
+                    />
+                    <Typography>{"Font Family"}</Typography>
+                  </span>
+                  <IconButton
+                  //  onClick={handleIconClick2}
+                  >
+                    <MenuIcon
+                      sx={{ width: "18px", height: "18px", color: "white" }}
+                    />
+                  </IconButton>
+                </Box>
                 <div style={{ maxHeight: "80px", overflowY: "auto" }}>
                   <TextField
                     value={fontFamily}
@@ -1473,7 +1666,7 @@ function ResumeBasics() {
                     inputRef={inputRef}
                     fullWidth
                     size="small"
-
+                    sx={{ border: "1px solid gray", mb: 2 }}
                     // Prevent keyboard from editing directly
                   />
 
